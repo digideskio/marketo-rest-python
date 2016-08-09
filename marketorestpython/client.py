@@ -235,7 +235,7 @@ class MarketoClient:
 
     def authenticate(self):
         if self.valid_until is not None and\
-            self.valid_until > time.time():
+            self.valid_until - time.time() >= 60:
             return
         args = {
             'grant_type': 'client_credentials',
