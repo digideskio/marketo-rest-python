@@ -269,7 +269,6 @@ class MarketoClient:
         return result['result']
 
     def get_multiple_leads_by_filter_type(self, filterType, filterValues, fields=None, batchSize=None):
-        self.authenticate()
         if filterType is None: raise ValueError("Invalid argument: required argument filterType is none.")
         if filterValues is None: raise ValueError("Invalid argument: required argument filter_values is none.")
         filterValues = filterValues.split() if type(filterValues) is str else filterValues
@@ -284,6 +283,7 @@ class MarketoClient:
         }
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/leads.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -294,7 +294,6 @@ class MarketoClient:
         return result_list
 
     def get_multiple_leads_by_list_id(self, listId, fields=None, batchSize=None):
-        self.authenticate()
         if listId is None: raise ValueError("Invalid argument: required argument listId is none.")
         args = {
             'access_token': self.token,
@@ -307,6 +306,7 @@ class MarketoClient:
             data.append(('batchSize',batchSize))
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/list/" + str(listId)+ "/leads.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -317,7 +317,6 @@ class MarketoClient:
         return result_list
 
     def get_multiple_leads_by_list_id_yield(self, listId, fields=None, batchSize=None, chunksize=-1):
-        self.authenticate()
         if listId is None: raise ValueError("Invalid argument: required argument listId is none.")
         args = {
             'access_token': self.token,
@@ -331,6 +330,7 @@ class MarketoClient:
         result_list = []
         count = 0
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/list/" + str(listId)+ "/leads.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success']: raise MarketoException(result['errors'][0])
@@ -347,7 +347,6 @@ class MarketoClient:
                 count = 0
 
     def get_multiple_leads_by_program_id(self, programId, fields=None, batchSize=None):
-        self.authenticate()
         args = {
             'access_token': self.token,
             '_method': 'GET'
@@ -359,6 +358,7 @@ class MarketoClient:
             data.append(('batchSize',batchSize))
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/leads/programs/" + str(programId)+ ".json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -465,7 +465,6 @@ class MarketoClient:
         return result['result']
 
     def get_multiple_lists(self, id=None, name=None, programName=None, workspaceName=None, batchSize=None):
-        self.authenticate()
         args = {
             'access_token' : self.token
         }
@@ -481,6 +480,7 @@ class MarketoClient:
             args['batchSize'] = batchSize
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/v1/lists.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -554,7 +554,6 @@ class MarketoClient:
         return result['result']
 
     def get_multiple_campaigns(self, id=None, name=None, programName=None, workspaceName=None, batchSize=None):
-        self.authenticate()
         args = {
             'access_token' : self.token,
             '_method' : 'GET'
@@ -573,6 +572,7 @@ class MarketoClient:
             args['batchSize'] = batchSize
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/campaigns.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -739,7 +739,6 @@ class MarketoClient:
 
     def get_lead_activities(self, activityTypeIds, nextPageToken=None, sinceDatetime=None, untilDatetime=None,
                             batchSize = None, listId = None, leadIds=None):
-        self.authenticate()
         if activityTypeIds is None: raise ValueError("Invalid argument: required argument activityTypeIds is none.")
         if nextPageToken is None and sinceDatetime is None: raise ValueError("Either nextPageToken or sinceDatetime needs to be specified.")
         activityTypeIds = activityTypeIds.split() if type(activityTypeIds) is str else activityTypeIds
@@ -758,6 +757,7 @@ class MarketoClient:
         args['nextPageToken'] = nextPageToken
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/v1/activities.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -773,7 +773,6 @@ class MarketoClient:
         return result_list
 
     def get_lead_changes(self, fields, nextPageToken=None, sinceDatetime=None, batchSize=None, listId=None):
-        self.authenticate()
         if fields is None: raise ValueError("Invalid argument: required argument fields is none.")
         if nextPageToken is None and sinceDatetime is None: raise ValueError("Either nextPageToken or sinceDatetime needs to be specified.")
         fields = fields.split() if type(fields) is str else fields
@@ -790,6 +789,7 @@ class MarketoClient:
         args['nextPageToken'] = nextPageToken
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/v1/activities/leadchanges.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -874,7 +874,6 @@ class MarketoClient:
         return result['result']
 
     def get_deleted_leads(self, nextPageToken=None, sinceDatetime=None, batchSize = None):
-        self.authenticate()
         if nextPageToken is None and sinceDatetime is None: raise ValueError("Either nextPageToken or sinceDatetime needs to be specified.")
         args = {
             'access_token' : self.token
@@ -886,6 +885,7 @@ class MarketoClient:
         args['nextPageToken'] = nextPageToken
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/v1/activities/deletedleads.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -962,7 +962,6 @@ class MarketoClient:
         return result['result']
 
     def get_folder_contents(self, id, type, maxReturn=None):
-        self.authenticate()
         if id is None: raise ValueError("Invalid argument: required argument id is none.")
         if type is None: raise ValueError("Invalid argument: required argument type is none.")
         args = {
@@ -976,6 +975,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/folder/" + str(id) + "/content.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success']: raise MarketoException(result['errors'][0])
@@ -1021,7 +1021,6 @@ class MarketoClient:
         return result['result']
 
     def browse_folders(self, root, maxDepth=None, maxReturn=None, workSpace=None):
-        self.authenticate()
         if root is None: raise ValueError("Invalid argument: required argument root is none.")
         args = {
             'access_token' : self.token,
@@ -1038,6 +1037,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/folders.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -1177,7 +1177,6 @@ class MarketoClient:
         return result['result']
 
     def get_email_templates(self, maxReturn=None, status=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -1190,6 +1189,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/emailTemplates.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -1367,7 +1367,6 @@ class MarketoClient:
         return result['result']
 
     def get_emails(self, maxReturn=None, status=None, folderId=None, folderType=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -1382,6 +1381,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/emails.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -1672,7 +1672,6 @@ class MarketoClient:
         return result['result']
 
     def get_landing_pages(self, maxReturn=None, status=None, folderId=None, folderType=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -1687,6 +1686,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/landingPages.json", args)
             if result is None: raise Exception("Empty Response")
             #if not result['success']: raise MarketoException(result['errors'][0] + ". Request ID: " + result['requestId'])
@@ -2058,7 +2058,6 @@ class MarketoClient:
         return result['result']
 
     def get_forms(self, maxReturn=None, status=None, folderId=None, folderType=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -2073,6 +2072,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/forms.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success']: raise MarketoException(result['errors'][0])
@@ -2312,7 +2312,6 @@ class MarketoClient:
         return result['result']
 
     def list_files(self, folder=None, maxReturn=None):
-        self.authenticate()
         args = {
             'access_token' : self.token
         }
@@ -2325,6 +2324,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/files.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success']: raise MarketoException(result['errors'][0])
@@ -2411,7 +2411,6 @@ class MarketoClient:
         return result['result']
 
     def get_snippets(self, maxReturn=None, status=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -2424,6 +2423,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/snippets.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -2625,7 +2625,6 @@ class MarketoClient:
         return result['result']
 
     def get_landing_page_templates(self, maxReturn=None, status=None, folderId=None, folderType=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -2640,6 +2639,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/landingPageTemplates.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -2858,7 +2858,6 @@ class MarketoClient:
         return result['result']
 
     def browse_programs(self, status=None, maxReturn=None):
-        self.authenticate()
         args = {
             'access_token' : self.token
         }
@@ -2871,6 +2870,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/programs.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -2926,7 +2926,6 @@ class MarketoClient:
         return result['result']
 
     def get_channels(self, maxReturn=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -2937,6 +2936,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/channels.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success']: raise MarketoException(result['errors'][0])
@@ -2964,7 +2964,6 @@ class MarketoClient:
         return result['result']
 
     def get_tags(self, maxReturn=None):
-        self.authenticate()
         args = {
             'access_token': self.token
         }
@@ -2975,6 +2974,7 @@ class MarketoClient:
         result_list = []
         offset = 0
         while True:
+            self.authenticate()
             result = HttpLib().get(self.host + "/rest/asset/v1/tagTypes.json", args)
             if result is None: raise Exception("Empty Response")
             if not result['success']: raise MarketoException(result['errors'][0])
@@ -3066,7 +3066,6 @@ class MarketoClient:
         return result['result']
 
     def get_custom_objects(self, name, input, filterType, fields=None, batchSize=None):
-        self.authenticate()
         if name is None: raise ValueError("Invalid argument: required argument name is none.")
         if input is None: raise ValueError("Invalid argument: required argument input is none.")
         if filterType is None: raise ValueError("Invalid argument: required argument filterType is none.")
@@ -3084,6 +3083,7 @@ class MarketoClient:
             data['batchSize'] = batchSize
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/customobjects/" + name + ".json", args, data)
             if result is None: raise Exception("Empty Response")
             if not result['success']: raise MarketoException(result['errors'][0])
@@ -3142,7 +3142,6 @@ class MarketoClient:
         return result['result']
 
     def get_opportunities(self, filterType, filterValues, fields=None, batchSize=None):
-        self.authenticate()
         if filterType is None: raise ValueError("Invalid argument: required argument filterType is none.")
         if filterValues is None: raise ValueError("Invalid argument: required argument filter_values is none.")
         args = {
@@ -3157,6 +3156,7 @@ class MarketoClient:
             data.append(('batchSize',batchSize))
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/opportunities.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -3213,7 +3213,6 @@ class MarketoClient:
         return result['result']
 
     def get_opportunity_roles(self, filterType, filterValues, fields=None, batchSize=None):
-        self.authenticate()
         if filterType is None: raise ValueError("Invalid argument: required argument filterType is none.")
         if filterValues is None: raise ValueError("Invalid argument: required argument filter_values is none.")
         args = {
@@ -3228,6 +3227,7 @@ class MarketoClient:
             data.append(('batchSize',batchSize))
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/opportunities/roles.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -3289,7 +3289,6 @@ class MarketoClient:
         return result['result']
 
     def get_companies(self, filterType, filterValues, fields=None, batchSize=None):
-        self.authenticate()
         if filterType is None: raise ValueError("Invalid argument: required argument filterType is none.")
         if filterValues is None: raise ValueError("Invalid argument: required argument filter_values is none.")
         args = {
@@ -3304,6 +3303,7 @@ class MarketoClient:
             data.append(('batchSize',batchSize))
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/companies.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
@@ -3362,7 +3362,6 @@ class MarketoClient:
         return result['result']
 
     def get_sales_persons(self, filterType, filterValues, fields=None, batchSize=None):
-        self.authenticate()
         if filterType is None: raise ValueError("Invalid argument: required argument filterType is none.")
         if filterValues is None: raise ValueError("Invalid argument: required argument filter_values is none.")
         args = {
@@ -3377,6 +3376,7 @@ class MarketoClient:
             data.append(('batchSize',batchSize))
         result_list = []
         while True:
+            self.authenticate()
             result = HttpLib().post(self.host + "/rest/v1/salespersons.json", args, data, mode='nojsondumps')
             if result is None: raise Exception("Empty Response")
             if not result['success'] : raise MarketoException(result['errors'][0])
