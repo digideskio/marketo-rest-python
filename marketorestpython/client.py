@@ -226,7 +226,8 @@ class MarketoClient:
                 602 -> auth token expired
                 '''
                 if e.code in ['601', '602']:
-                   continue
+                    self.authenticate()
+                    continue
                 else:
                     raise Exception({'message':e.message, 'code':e.code})
             break
